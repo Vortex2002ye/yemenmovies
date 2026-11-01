@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yemen Movies Activity</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
+        body { background-color: #0f1015; color: #fff; padding: 20px; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: #5865F2; margin-bottom: 10px; }
+        .search-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        input { width: 300px; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #202225; color: #fff; font-size: 16px; }
+        button { padding: 10px 20px; border-radius: 8px; border: none; background: #5865F2; color: #fff; font-weight: bold; cursor: pointer; }
+        button:hover { background: #4752C4; }
+        .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .movie-card { background: #2f3136; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .movie-card img { width: 100%; height: 260px; object-fit: cover; }
+        .movie-info { padding: 10px; text-align: center; }
+        .movie-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .watch-btn { display: block; background: #eb459e; color: #fff; text-decoration: none; padding: 8px; border-radius: 5px; font-size: 13px; font-weight: bold; margin-top: 10px; }
+        .watch-btn:hover { background: #d03588; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎬 Yemen Movies Activity</h1>
+        <p>اختر فيلمك أو مسلسلك المفضّل وشاهده مباشرة مع أصدقائك في الروم الصوتي!</p>
+    </header>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل...">
+        <button onclick="searchMovies()">بحث</button>
+    </div>
+
+    <div class="movies-grid" id="moviesContainer">
+        <!-- ستظهر الأفلام هنا تلقائياً -->
+    </div>
+
+    <script>
+        const API_KEY = "b27aae4379d382776f6d3cccdd";
+
+        async function loadTrending() {
+            const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}&language=ar`);
+            const data = await res.json();
+            displayResults(data.results);
+        }
+
+        async function searchMovies() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return;
+            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}&language=ar`);
+            const data = await res.json();
+            displayResults(data.results);
+        }
+
+        function displayResults(items) {
+            const container = document.getElementById('moviesContainer');
+            container.innerHTML = '';
+            
+            items.forEach(item => {
+                if (item.media_type !== 'movie' && item.media_type !== 'tv') return;
+                
+                const title = item.title || item.name;
+                const poster = item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://via.placeholder.com/180x260?text=No+Image';
+                const movizLink = `https://www.moviz.land/?s=${encodeURIComponent(title)}`;
+
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.innerHTML = `
+                    <img src="${poster}" alt="${title}">
+                    <div class="movie-info">
+                        <div class="movie-title" title="${title}">${title}</div>
+                        <a href="${movizLink}" target="_blank" class="watch-btn">مشاهدة على MovizLand</a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // تحميل الأفلام الرائجة فور فتح الصفحة
+        loadTrending();
+    </script>
+</body>
+</html>
