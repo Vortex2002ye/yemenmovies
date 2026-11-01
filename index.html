@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yemen Movies - منصة الأفلام والمسلسلات</title>
+    <title>Yemen Movies - منصة البث المحلية</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
         body { background-color: #0c0d12; color: #fff; padding: 20px; }
@@ -56,20 +56,20 @@
             <span onclick="filterCategory('tv')">مسلسلات</span>
         </div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث في المكتبة..." onkeydown="if(event.key === 'Enter') searchMovies()">
+            <input type="text" id="searchInput" placeholder="ابحث في المستودع المحلي..." onkeydown="if(event.key === 'Enter') searchMovies()">
             <button onclick="searchMovies()">بحث</button>
         </div>
     </div>
 
     <div id="heroSection"></div>
 
-    <div class="section-title" id="sectionTitle">🔥 مكتبة الأفلام والمسلسلات المميزة</div>
+    <div class="section-title" id="sectionTitle">🔥 مكتبة الأعمال والمصادر المميزة</div>
     
     <div class="movies-grid" id="moviesContainer"></div>
 
     <script>
-        // مكتبة ضخمة محلية وآمنة 100% تعمل على المتصفح بدون أي حظر CORS أو تعليق
-        const library = [
+        // مستودع محلي متكامل يمثل المصادر الجاهزة للتشغيل السريع على المتصفح
+        const repository = [
             { id: 1, type: "movie", title: "Avatar: The Way of Water", poster: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", backdrop: "https://image.tmdb.org/t/p/w1280/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", overview: "تتعرض عائلة سولي للكثير من المخاطر والتهجير للنجاة بحياتهم في عوالم باندورا المائية." },
             { id: 2, type: "movie", title: "Interstellar", poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", backdrop: "https://image.tmdb.org/t/p/w1280/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", overview: "رحلة عبر الثقوب الدودية للفضاء السحيق لإنقاذ البشرية وبحث موطن جديد." },
             { id: 3, type: "tv", title: "Breaking Bad", poster: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg", backdrop: "https://image.tmdb.org/t/p/w1280/ggFHVNu6YYI5L9pCfOacjizRGt.jpg", overview: "مدرس كيمياء يصاب بمرض خطير فيتحول لصنع وتجارة المواد الممنوعة لتأمين مستقبل عائلته." },
@@ -81,8 +81,8 @@
         ];
 
         function initApp() {
-            setHero(library[0]);
-            displayResults(library);
+            setHero(repository[0]);
+            displayResults(repository);
         }
 
         function setHero(item) {
@@ -91,10 +91,10 @@
                 <div class="hero">
                     <img src="${item.backdrop}" class="hero-img" alt="${item.title}">
                     <div class="hero-content">
-                        <div class="hero-badge">🔥 عمل مميز بارز</div>
+                        <div class="hero-badge">🔥 مصدر رئيسي مميز</div>
                         <div class="hero-title">${item.title}</div>
                         <div class="hero-desc">${item.overview}</div>
-                        <a href="${watchLink}" target="_blank" class="btn-watch">▶ مشاهدة العمل</a>
+                        <a href="${watchLink}" target="_blank" class="btn-watch">▶ مشاهدة عبر المصدر</a>
                     </div>
                 </div>
             `;
@@ -105,7 +105,7 @@
             container.innerHTML = '';
             
             if(items.length === 0) {
-                container.innerHTML = `<div class="loading">❌ لم يتم العثور على نتائج مطابقة.</div>`;
+                container.innerHTML = `<div class="loading">❌ لم يتم العثور على نتائج في هذا المستودع.</div>`;
                 return;
             }
 
@@ -129,10 +129,10 @@
             event.target.classList.add('active');
 
             if(type === 'all') {
-                document.getElementById('sectionTitle').innerText = "🔥 مكتبة الأفلام والمسلسلات المميزة";
-                displayResults(library);
+                document.getElementById('sectionTitle').innerText = "🔥 مكتبة الأعمال والمصادر المميزة";
+                displayResults(repository);
             } else {
-                const filtered = library.filter(m => m.type === type);
+                const filtered = repository.filter(m => m.type === type);
                 document.getElementById('sectionTitle').innerText = type === 'movie' ? "🎥 قائمة الأفلام السينمائية" : "📺 قائمة المسلسلات التلفزيونية";
                 displayResults(filtered);
             }
@@ -143,11 +143,11 @@
             const container = document.getElementById('moviesContainer');
             
             if(!query) {
-                displayResults(library);
+                displayResults(repository);
                 return;
             }
 
-            const filtered = library.filter(m => m.title.toLowerCase().includes(query));
+            const filtered = repository.filter(m => m.title.toLowerCase().includes(query));
             document.getElementById('sectionTitle').innerText = `🔎 نتائج البحث عن: "${query}"`;
             
             if(filtered.length > 0) {
@@ -156,7 +156,7 @@
             } else {
                 container.innerHTML = `
                     <div class="loading" style="grid-column: 1 / -1;">
-                        <p style="margin-bottom: 12px;">🔍 هل تبحث عن "${query}" غير موجود بالقائمة؟ انقر للانتقال للبحث المباشر:</p>
+                        <p style="margin-bottom: 12px;">🔍 هل تبحث عن "${query}" خارج المستودع الحالي؟ انقر للانتقال للبحث المباشر:</p>
                         <a href="https://www.moviz.land/?s=${encodeURIComponent(query)}" target="_blank" class="watch-btn" style="display: inline-block; padding: 10px 20px;">بحث مباشر في MovizLand 🎬</a>
                     </div>
                 `;
