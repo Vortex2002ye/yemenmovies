@@ -6,48 +6,83 @@
     <title>Yemen Movies Activity</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
-        body { background-color: #0f1015; color: #fff; padding: 20px; }
-        header { text-align: center; margin-bottom: 25px; }
-        h1 { color: #5865F2; margin-bottom: 10px; }
-        p { color: #b9bbbe; font-size: 14px; }
-        .search-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-        input { width: 320px; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #202225; color: #fff; font-size: 15px; outline: none; }
-        input:focus { border-color: #5865F2; }
-        button { padding: 12px 24px; border-radius: 8px; border: none; background: #5865F2; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #4752C4; }
+        body { background-color: #0c0d12; color: #fff; padding: 20px; }
         
-        .section-title { font-size: 18px; margin-bottom: 15px; color: #dcddde; border-right: 4px solid #5865F2; padding-right: 10px; }
+        /* شريط التنقل العلوي */
+        .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px; }
+        .nav-brand { font-size: 20px; font-weight: bold; color: #e50914; display: flex; align-items: center; gap: 8px; }
+        .nav-links { display: flex; gap: 20px; font-size: 14px; color: #aaa; }
+        .nav-links span { cursor: pointer; transition: 0.2s; }
+        .nav-links span:hover, .nav-links span.active { color: #fff; font-weight: bold; }
         
+        .search-box { display: flex; gap: 8px; }
+        input { width: 220px; padding: 8px 12px; border-radius: 6px; border: 1px solid #444; background: #181920; color: #fff; font-size: 13px; outline: none; }
+        input:focus { border-color: #e50914; }
+        button { padding: 8px 16px; border-radius: 6px; border: none; background: #e50914; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #b20710; }
+
+        /* قسم الفيلم الرئيسي البارز (Hero) */
+        .hero { position: relative; border-radius: 12px; overflow: hidden; margin-bottom: 30px; background: #1a1c23; display: flex; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        .hero-img { width: 350px; height: 220px; object-fit: cover; }
+        .hero-content { padding: 25px; display: flex; flex-direction: column; justify-content: center; }
+        .hero-badge { background: #e50914; color: #fff; padding: 3px 10px; font-size: 11px; border-radius: 4px; width: fit-content; margin-bottom: 10px; font-weight: bold; }
+        .hero-title { font-size: 26px; font-weight: bold; margin-bottom: 10px; }
+        .hero-desc { font-size: 13px; color: #b9bbbe; line-height: 1.6; margin-bottom: 20px; max-width: 600px; }
+        .hero-btns { display: flex; gap: 12px; }
+        .btn-watch { background: #e50914; color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+        .btn-watch:hover { background: #b20710; }
+        .btn-details { background: rgba(255,255,255,0.1); color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .btn-details:hover { background: rgba(255,255,255,0.2); }
+
+        /* شبكة الأفلام */
+        .section-title { font-size: 18px; margin-bottom: 15px; color: #fff; border-right: 4px solid #e50914; padding-right: 10px; }
         .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .movie-card { background: #2f3136; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .movie-card img { width: 100%; height: 230px; object-fit: cover; background: #202225; }
-        .movie-info { padding: 10px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
-        .movie-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #fff; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .watch-btn { display: block; background: #eb459e; color: #fff; text-decoration: none; text-align: center; padding: 7px; border-radius: 5px; font-size: 12px; font-weight: bold; margin-top: 5px; }
-        .watch-btn:hover { background: #d03588; }
+        .movie-card { background: #181920; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; cursor: pointer; }
+        .movie-card:hover { transform: translateY(-5px); }
+        .movie-card img { width: 100%; height: 230px; object-fit: cover; }
+        .movie-info { padding: 10px; }
+        .movie-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .watch-btn { display: block; background: #e50914; color: #fff; text-decoration: none; text-align: center; padding: 6px; border-radius: 5px; font-size: 12px; font-weight: bold; transition: background 0.2s; }
+        .watch-btn:hover { background: #b20710; }
         .loading { text-align: center; color: #8e9297; grid-column: 1 / -1; padding: 30px; font-size: 16px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>🎬 Yemen Movies Activity</h1>
-        <p>اختر فيلمك أو مسلسلك المفضّل وشاهده مباشرة على موفيز لاند!</p>
-    </header>
-
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل..." onkeydown="if(event.key === 'Enter') searchMovies()">
-        <button onclick="searchMovies()">بحث</button>
+    <!-- شريط التنقل -->
+    <div class="navbar">
+        <div class="nav-brand">🎬 Yemen Movies</div>
+        <div class="nav-links">
+            <span class="active">الرئيسية</span>
+            <span>أفلام</span>
+            <span>مسلسلات</span>
+            <span>قائمتي</span>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ابحث عن فيلم أو مسلسل..." onkeydown="if(event.key === 'Enter') searchMovies()">
+            <button onclick="searchMovies()">بحث</button>
+        </div>
     </div>
 
-    <div class="section-title" id="sectionTitle">🔥 قائمة الأفلام والمسلسلات المميزة</div>
+    <!-- واجهة الفيلم البارز بالأعلى (Hero Section) -->
+    <div class="hero">
+        <img src="https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" class="hero-img" alt="Avatar">
+        <div class="hero-content">
+            <div class="hero-badge">🔥 الأكثر مشاهدة اليوم</div>
+            <div class="hero-title">Avatar: The Way of Water</div>
+            <div class="hero-desc">تتعرض عائلة سولي للكثير من المخاطر والتهجير، ويبذلون قصارى جهدهم لحماية بعضهم البعض والنجاة من الأكوان المحيطة بهم.</div>
+            <div class="hero-btns">
+                <a href="https://www.moviz.land/?s=Avatar" target="_blank" class="btn-watch">▶ مشاهدة الآن</a>
+                <a href="https://www.moviz.land/?s=Avatar" target="_blank" class="btn-details">التفاصيل</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title" id="sectionTitle">🔥 أفلام ومسلسلات سينمائية مميزة</div>
     
-    <div class="movies-grid" id="moviesContainer">
-        <!-- ستعرض هنا مباشرة -->
-    </div>
+    <div class="movies-grid" id="moviesContainer"></div>
 
     <script>
-        // مكتبة ضخمة ومنظمة لأشهر الأفلام والمسلسلات مع بوستراتها الأصلية
         const moviesList = [
             { title: "Avatar: The Way of Water", poster: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg" },
             { title: "Interstellar", poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
@@ -72,7 +107,7 @@
             const container = document.getElementById('moviesContainer');
             
             if (!query) {
-                document.getElementById('sectionTitle').innerText = "🔥 قائمة الأفلام والمسلسلات المميزة";
+                document.getElementById('sectionTitle').innerText = "🔥 أفلام ومسلسلات سينمائية مميزة";
                 displayResults(moviesList);
                 return;
             }
@@ -83,11 +118,10 @@
                 document.getElementById('sectionTitle').innerText = `🔎 نتائج البحث عن: "${query}"`;
                 displayResults(filtered);
             } else {
-                // إذا لم يكن في القائمة المباشرة، يتيح له البحث عنه بضغطة زر مباشرة في موفيز لاند
                 container.innerHTML = `
                     <div class="loading" style="grid-column: 1 / -1;">
-                        <p style="margin-bottom: 15px; font-size: 15px;">🔍 هل تبحث عن فيلم أو مسلسل غير موجود بالقائمة؟ انقر بالأسفل لفتحه وبحثه مباشرة على موفيز لاند:</p>
-                        <a href="https://www.moviz.land/?s=${encodeURIComponent(query)}" target="_blank" class="watch-btn" style="display: inline-block; padding: 12px 25px; font-size: 14px;">الانتقال للبحث في MovizLand 🎬</a>
+                        <p style="margin-bottom: 15px; font-size: 15px;">🔍 ابحث عن "${query}" مباشرة:</p>
+                        <a href="https://www.moviz.land/?s=${encodeURIComponent(query)}" target="_blank" class="watch-btn" style="display: inline-block; padding: 10px 20px; font-size: 14px;">بحث ومشاهدة في MovizLand 🎬</a>
                     </div>
                 `;
             }
@@ -106,14 +140,13 @@
                     <img src="${movie.poster}" alt="${movie.title}" loading="lazy">
                     <div class="movie-info">
                         <div class="movie-title" title="${movie.title}">${movie.title}</div>
-                        <a href="${movizLink}" target="_blank" class="watch-btn">مشاهدة على MovizLand</a>
+                        <a href="${movizLink}" target="_blank" class="watch-btn">مشاهدة</a>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        // تشغيل مباشر
         loadAllMovies();
     </script>
 </body>
