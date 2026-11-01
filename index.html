@@ -3,134 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yemen Movies - منصة إيجي ديد</title>
+    <title>Yemen Movies - منصة المستودعات</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
         body { background-color: #0c0d12; color: #fff; padding: 20px; }
         
-        .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px; flex-wrap: wrap; gap: 15px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px; flex-wrap: wrap; gap: 15px; }
         .nav-brand { font-size: 22px; font-weight: bold; color: #e50914; display: flex; align-items: center; gap: 8px; }
-        .nav-links { display: flex; gap: 20px; font-size: 14px; color: #aaa; }
+        .nav-links { display: flex; gap: 15px; font-size: 14px; color: #aaa; }
         .nav-links span { cursor: pointer; transition: 0.2s; }
         .nav-links span:hover, .nav-links span.active { color: #fff; font-weight: bold; }
         
-        .search-box { display: flex; gap: 8px; }
-        input { width: 250px; padding: 9px 12px; border-radius: 6px; border: 1px solid #444; background: #181920; color: #fff; font-size: 13px; outline: none; }
-        input:focus { border-color: #e50914; }
-        button { padding: 9px 18px; border-radius: 6px; border: none; background: #e50914; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #b20710; }
+        /* شريط إضافة المستودعات (قائمة المستودعات) */
+        .repo-bar { background: #15171e; padding: 12px 18px; border-radius: 8px; margin-bottom: 25px; display: flex; gap: 10px; align-items: center; border: 1px solid #2a2d39; flex-wrap: wrap; }
+        .repo-bar input { flex-grow: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #444; background: #181920; color: #fff; font-size: 13px; outline: none; }
+        .repo-bar input:focus { border-color: #e50914; }
+        .repo-bar button { padding: 8px 16px; border-radius: 6px; border: none; background: #28a745; color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 13px; }
+        .repo-bar button:hover { background: #218838; }
 
-        /* منطقة المشغل المدمج داخل الموقع */
-        .player-container { display: none; background: #181920; border-radius: 12px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.7); border: 1px solid #333; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .player-info { padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .player-title { font-size: 20px; font-weight: bold; color: #fff; }
-        .close-player { background: #333; color: #fff; padding: 6px 15px; border-radius: 5px; cursor: pointer; border: none; font-size: 13px; }
-        .close-player:hover { background: #e50914; }
+        .search-box { display: flex; gap: 8px; }
+        .search-box input { width: 200px; padding: 8px 12px; border-radius: 6px; border: 1px solid #444; background: #181920; color: #fff; font-size: 13px; outline: none; }
+        .search-box button { padding: 8px 15px; border-radius: 6px; border: none; background: #e50914; color: #fff; font-weight: bold; cursor: pointer; }
+
+        /* مشغل الفيديو الداخلي */
+        .player-section { display: none; background: #15171e; border-radius: 12px; overflow: hidden; margin-bottom: 30px; border: 1px solid #2a2d39; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .player-details { padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .current-title { font-size: 20px; font-weight: bold; color: #fff; }
+        .btn-close { background: #333; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-close:hover { background: #e50914; }
 
         .section-title { font-size: 18px; margin-bottom: 15px; color: #fff; border-right: 4px solid #e50914; padding-right: 10px; }
         .movies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
         .movie-card { background: #181920; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; cursor: pointer; }
         .movie-card:hover { transform: translateY(-5px); }
         .movie-card img { width: 100%; height: 230px; object-fit: cover; background: #222; }
-        .movie-info { padding: 10px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
+        .movie-info { padding: 10px; }
         .movie-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .play-btn { display: block; background: #e50914; color: #fff; text-decoration: none; text-align: center; padding: 7px; border-radius: 5px; font-size: 12px; font-weight: bold; transition: background 0.2s; }
-        .play-btn:hover { background: #b20710; }
+        .play-badge { display: block; background: #e50914; color: #fff; text-align: center; padding: 6px; border-radius: 5px; font-size: 12px; font-weight: bold; }
         .loading { text-align: center; color: #8e9297; grid-column: 1 / -1; padding: 40px; font-size: 15px; }
     </style>
 </head>
 <body>
 
     <div class="navbar">
-        <div class="nav-brand">🎬 Yemen Movies (EgyDead Hub)</div>
+        <div class="nav-brand">🎬 Yemen Movies Repositories</div>
         <div class="nav-links">
             <span class="active" onclick="filterCategory('all')">الرئيسية</span>
             <span onclick="filterCategory('movie')">أفلام</span>
             <span onclick="filterCategory('tv')">مسلسلات</span>
         </div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث في مكتبة إيجي ديد..." onkeydown="if(event.key === 'Enter') searchMovies()">
-            <button onclick="searchMovies()">بحث</button>
+            <input type="text" id="searchInput" placeholder="بحث سريع..." onkeydown="if(event.key === 'Enter') searchMedia()">
+            <button onclick="searchMedia()">بحث</button>
         </div>
     </div>
 
-    <!-- مشغل الفيديو المدمج (يظهر عند الضغط على أي عمل) -->
-    <div class="player-container" id="playerContainer">
-        <div class="video-wrapper">
-            <iframe id="videoIframe" src="" allowfullscreen></iframe>
+    <!-- شريط إضافة رابط المستودع الخارجي (JSON Repository) -->
+    <div class="repo-bar">
+        <span style="font-size: 14px; font-weight: bold; color: #ddd;">📦 إضافة مستودع (JSON):</span>
+        <input type="text" id="repoUrlInput" placeholder="أدخل رابط ملف الـ JSON من جيت هب هنا...">
+        <button onclick="loadExternalRepository()">تثبيت المستودع</button>
+    </div>
+
+    <!-- قسم مشغل الفيديو الداخلي -->
+    <div class="player-section" id="playerSection">
+        <div class="video-container">
+            <iframe id="mainPlayer" src="" allowfullscreen></iframe>
         </div>
-        <div class="player-info">
-            <div class="player-title" id="playerTitle">اختر عملاً للمشاهدة</div>
-            <button class="close-player" onclick="closePlayer()">إغلاق المشغل ✕</button>
+        <div class="player-details">
+            <div class="current-title" id="currentTitle">اختر عملاً للمشاهدة</div>
+            <button class="btn-close" onclick="closePlayer()">إغلاق المشغل ✕</button>
         </div>
     </div>
 
-    <div class="section-title" id="sectionTitle">🔥 أحدث مختارات إيجي ديد المميزة</div>
+    <div class="section-title" id="sectionTitle">🔥 مكتبة الأفلام والمسلسلات النشطة</div>
     
     <div class="movies-grid" id="moviesContainer"></div>
 
     <script>
-        // قاعدة بيانات تمثل مكتبة مستوحاة من مصادر إيجي ديد وسيرفرات البث المباشر
-        const egyDeadLibrary = [
-            { id: 1, type: "movie", title: "Avatar: The Way of Water", poster: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", embedUrl: "https://www.youtube.com/embed/d9MyW72ELq0" },
-            { id: 2, type: "movie", title: "Interstellar", poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", embedUrl: "https://www.youtube.com/embed/zSWdZVtXT7E" },
-            { id: 3, type: "tv", title: "Breaking Bad", poster: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg", embedUrl: "https://www.youtube.com/embed/HhesaQXLuRY" },
-            { id: 4, type: "movie", title: "Avengers: Endgame", poster: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg", embedUrl: "https://www.youtube.com/embed/TcMBFSGVi1c" },
-            { id: 5, type: "movie", title: "The Batman", poster: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg", embedUrl: "https://www.youtube.com/embed/mqqft2x_Aa4" },
-            { id: 6, type: "movie", title: "Spider-Man: No Way Home", poster: "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg", embedUrl: "https://www.youtube.com/embed/JfVOs4VSpmA" },
-            { id: 7, type: "movie", title: "John Wick: Chapter 4", poster: "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg", embedUrl: "https://www.youtube.com/embed/yjRHvt7uGCI" },
-            { id: 8, type: "tv", title: "Game of Thrones", poster: "https://image.tmdb.org/t/p/w500/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg", embedUrl: "https://www.youtube.com/embed/KPLWWIOCOOQ" }
+        // المستودع الافتراضي المحلي (يعمل فوراً)
+        let activeDatabase = [
+            { id: 1, type: "movie", title: "Avatar: The Way of Water", poster: "https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", streamUrl: "https://www.youtube.com/embed/d9MyW72ELq0" },
+            { id: 2, type: "movie", title: "Interstellar", poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", streamUrl: "https://www.youtube.com/embed/zSWdZVtXT7E" },
+            { id: 3, type: "tv", title: "Breaking Bad", poster: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg", streamUrl: "https://www.youtube.com/embed/HhesaQXLuRY" }
         ];
 
-        function initApp() {
-            displayResults(egyDeadLibrary);
-        }
-
-        function displayResults(items) {
+        function renderGrid(items) {
             const container = document.getElementById('moviesContainer');
             container.innerHTML = '';
-            
-            if(items.length === 0) {
-                container.innerHTML = `<div class="loading">❌ لم يتم العثور على نتائج مطابقة.</div>`;
+
+            if (items.length === 0) {
+                container.innerHTML = `<div class="loading">❌ المستودع فارغ أو لا توجد نتائج.</div>`;
                 return;
             }
 
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'movie-card';
-                card.onclick = () => playMedia(item.title, item.embedUrl);
+                card.onclick = () => playMedia(item.title, item.streamUrl);
                 card.innerHTML = `
                     <img src="${item.poster}" alt="${item.title}" loading="lazy">
                     <div class="movie-info">
                         <div class="movie-title" title="${item.title}">${item.title}</div>
-                        <div class="play-btn">▶ تشغيل داخلي</div>
+                        <div class="play-badge">▶ تشغيل داخلي</div>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function playMedia(title, embedUrl) {
-            const playerContainer = document.getElementById('playerContainer');
-            const iframe = document.getElementById('videoIframe');
-            const titleEl = document.getElementById('playerTitle');
+        // وظيفة جلب مستودع خارجي عبر الرابط
+        async function loadExternalRepository() {
+            const url = document.getElementById('repoUrlInput').value.trim();
+            const container = document.getElementById('moviesContainer');
+            
+            if (!url) {
+                alert('الرجاء إدخال رابط مستودع صحيح!');
+                return;
+            }
 
-            titleEl.innerText = `جارٍ تشغيل: ${title}`;
-            iframe.src = embedUrl;
-            playerContainer.style.display = 'block';
+            container.innerHTML = `<div class="loading">⏳ جاري الاتصال بالمستودع وسحب البيانات...</div>`;
 
-            // التمرير بسلاسة إلى أعلى الصفحة لعرض المشغل فوراً
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data && data.movies) {
+                    activeDatabase = data.movies;
+                    renderGrid(activeDatabase);
+                    alert(`تم تثبيت المستودع بنجاح! تم تحميل (${activeDatabase.length}) عنصراً.`);
+                } else {
+                    alert('هيكل المستودع غير صحيح، تأكد أن الملف يحتوي على مصفوفة "movies".');
+                    renderGrid(activeDatabase);
+                }
+            } catch (err) {
+                alert('فشل الاتصال بالمستودع (تأكد من أن الرابط مباشر ويدعم CORS).');
+                renderGrid(activeDatabase);
+            }
+        }
+
+        function playMedia(title, url) {
+            const section = document.getElementById('playerSection');
+            const iframe = document.getElementById('mainPlayer');
+            const titleEl = document.getElementById('currentTitle');
+
+            titleEl.innerText = `يعرض الآن: ${title}`;
+            iframe.src = url;
+            section.style.display = 'block';
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function closePlayer() {
-            const playerContainer = document.getElementById('playerContainer');
-            const iframe = document.getElementById('videoIframe');
-            
-            iframe.src = ''; // إيقاف الفيديو عند الإغلاق
-            playerContainer.style.display = 'none';
+            const section = document.getElementById('playerSection');
+            const iframe = document.getElementById('mainPlayer');
+            iframe.src = '';
+            section.style.display = 'none';
         }
 
         function filterCategory(type) {
@@ -138,31 +168,28 @@
             event.target.classList.add('active');
             closePlayer();
 
-            if(type === 'all') {
-                document.getElementById('sectionTitle').innerText = "🔥 أحدث مختارات إيجي ديد المميزة";
-                displayResults(egyDeadLibrary);
+            if (type === 'all') {
+                document.getElementById('sectionTitle').innerText = "🔥 مكتبة الأفلام والمسلسلات النشطة";
+                renderGrid(activeDatabase);
             } else {
-                const filtered = egyDeadLibrary.filter(m => m.type === type);
-                document.getElementById('sectionTitle').innerText = type === 'movie' ? "🎥 أفلام إيجي ديد" : "📺 مسلسلات إيجي ديد";
-                displayResults(filtered);
+                const filtered = activeDatabase.filter(x => x.type === type);
+                document.getElementById('sectionTitle').innerText = type === 'movie' ? "🎥 الأفلام" : "📺 المسلسلات";
+                renderGrid(filtered);
             }
         }
 
-        function searchMovies() {
+        function searchMedia() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            const container = document.getElementById('moviesContainer');
-            
-            if(!query) {
-                displayResults(egyDeadLibrary);
+            if (!query) {
+                renderGrid(activeDatabase);
                 return;
             }
-
-            const filtered = egyDeadLibrary.filter(m => m.title.toLowerCase().includes(query));
+            const filtered = activeDatabase.filter(x => x.title.toLowerCase().includes(query));
             document.getElementById('sectionTitle').innerText = `🔎 نتائج البحث عن: "${query}"`;
-            displayResults(filtered);
+            renderGrid(filtered);
         }
 
-        initApp();
+        renderGrid(activeDatabase);
     </script>
 </body>
 </html>
